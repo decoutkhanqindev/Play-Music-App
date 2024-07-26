@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.database.getStringOrNull
-import com.example.playmusicapp.R
 import com.example.playmusicapp.data.MusicContentProvider
 import com.example.playmusicapp.databinding.ActivityMainBinding
 
@@ -25,9 +24,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        queryMusics()
+
+        binding.insertBtn.setOnClickListener {
+            val nameOfSong = binding.nameOfSong.text.toString()
+            if (nameOfSong.isEmpty()) {
+                Toast.makeText(this, "Name of song is empty", Toast.LENGTH_SHORT).show()
+            } else {
+                insertSong(nameOfSong)
+                queryMusics()
+            }
+        }
     }
 
-    private fun insertMusic(name: String) {
+    private fun insertSong(name: String) {
         val nameValue = ContentValues().apply {
             put(NAME, name)
         }
@@ -41,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             /* projection = */ arrayOf(ID, NAME),
             /* selection = */ null,
             /* selectionArgs = */ null,
-            /* sortOrder = */ "ID ASC"
+            /* sortOrder = */ "$ID ASC"
         )
         cursor?.use {
             val idColumnIndex = cursor.getColumnIndexOrThrow(ID)
@@ -50,8 +60,9 @@ class MainActivity : AppCompatActivity() {
             while (cursor.moveToNext()) {
                 val id = cursor.getStringOrNull(idColumnIndex)
                 val name = cursor.getStringOrNull(nameColumnIndex)
-                arrayOfMusics.append("id=$id\t\t\tsong=$name\n")
+                arrayOfMusics.append("${id?.padEnd(50)} ${name}\n")
             }
+            binding.listOfSongs.text = arrayOfMusics.toString()
         }
     }
 }

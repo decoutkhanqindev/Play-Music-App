@@ -22,7 +22,7 @@ internal class MusicContentProvider : ContentProvider() {
 
         // cac constants cua database
         private const val DATABASE_NAME = "musics.db"
-        private const val TABLE_NAME = "musics.tb"
+        private const val TABLE_NAME = "musics_tb"
         internal const val COLUMN_ID = "id"
         internal const val COLUMN_NAME = "name"
         private const val DATABASE_VERSION = 1
@@ -79,9 +79,8 @@ internal class MusicContentProvider : ContentProvider() {
             /* sortOrder = */ sortOrder
         )
         // dang ki uri voi content resolver de nhan thong bao neu data trong bang thay doi
-        // uri = null -> tat ca cac uri lien quan den content resolver se dc thong bao
-        cursor?.setNotificationUri(context!!.contentResolver, null)
-        return cursor.use { it } // tu dong close cursor
+        cursor?.setNotificationUri(context!!.contentResolver, uri)
+        return cursor
     }
 
     override fun getType(uri: Uri): String {
@@ -99,7 +98,7 @@ internal class MusicContentProvider : ContentProvider() {
         )
         if (rowId > 0) { // chen thanh cong
             // tao uri moi + id
-            val newUri = ContentUris.withAppendedId(CONTENT_URI!!, rowId)
+            val newUri = ContentUris.withAppendedId(CONTENT_URI, rowId)
             // dang ky nhan thong bao cho content resolver rang
             // doi voi bat ki observer nao da dang ki voi uri moi da thay doi
             context!!.contentResolver.notifyChange(newUri, null)
