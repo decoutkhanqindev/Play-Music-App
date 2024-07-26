@@ -21,12 +21,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
         <provider
-            android:authorities="com.example.musicapp.provider"
             android:name=".data.MusicContentProvider"
-            android:exported="true"
-            />
+            android:authorities="com.example.musicapp.provider"
+            android:exported="true" />
     </application>
 
 </manifest>
