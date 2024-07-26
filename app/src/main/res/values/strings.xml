@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Play Music App</string>
+    <string name="id">ID</string>
+    <string name="name">NAME</string>
+    <string name="titleOfMusics">Your List</string>
+    <string name="hintEnterText">Enter Name of The Song</string>
+    <string name="insert">Insert</string>
 </resources>

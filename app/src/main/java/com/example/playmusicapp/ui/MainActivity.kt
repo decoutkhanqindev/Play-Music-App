@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             while (cursor.moveToNext()) {
                 val id = cursor.getStringOrNull(idColumnIndex)
                 val name = cursor.getStringOrNull(nameColumnIndex)
-                arrayOfMusics.append("$id\t\t\t$name\n")
+                arrayOfMusics.append("id=$id\t\t\tsong=$name\n")
             }
         }
     }
