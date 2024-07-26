@@ -12,19 +12,19 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.database.sqlite.SQLiteQueryBuilder
 import android.net.Uri
 
-private class MusicContentProvider : ContentProvider() {
+internal class MusicContentProvider : ContentProvider() {
 
     companion object {
         // Authority cua content provider
         private const val AUTHORITY = "com.example.musicapp.provider"
         private const val URL = "content://$AUTHORITY/musics"
-        val CONTENT_URI: Uri? = Uri.parse(URL)
+        val CONTENT_URI: Uri = Uri.parse(URL)
 
         // cac constants cua database
         private const val DATABASE_NAME = "musics.db"
         private const val TABLE_NAME = "musics.tb"
-        private const val COLUMN_ID = "id"
-        private const val COLUMN_NAME = "name"
+        internal const val COLUMN_ID = "id"
+        internal const val COLUMN_NAME = "name"
         private const val DATABASE_VERSION = 1
         private const val CREATE_TABLE = """
             CREATE TABLE $TABLE_NAME (
