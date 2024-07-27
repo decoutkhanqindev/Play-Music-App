@@ -18,8 +18,8 @@ class MainActivity : AppCompatActivity() {
 
     // musics content provider
     private val uri = MusicContentProvider.CONTENT_URI
-    private val id = MusicContentProvider.COLUMN_ID
-    private val name = MusicContentProvider.COLUMN_NAME
+    private val columnId = MusicContentProvider.COLUMN_ID
+    private val columnName = MusicContentProvider.COLUMN_NAME
 
     // network broadcast receiver
     private val receiver = NetworkConnectivityReceiver()
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun insertNewSong(name: String) {
         val nameValue = ContentValues().apply {
-            put(id, name)
+            put(columnName, name)
         }
         contentResolver.insert(uri, nameValue)
             .let { Toast.makeText(this, "New Music Inserted", Toast.LENGTH_LONG).show() }
@@ -63,14 +63,14 @@ class MainActivity : AppCompatActivity() {
     private fun displayMusicList() {
         val cursor = contentResolver.query(
             /* uri = */ uri,
-            /* projection = */ arrayOf(id, name),
+            /* projection = */ arrayOf(columnId, columnName),
             /* selection = */ null,
             /* selectionArgs = */ null,
-            /* sortOrder = */ "$id ASC"
+            /* sortOrder = */ "$columnId ASC"
         )
         cursor?.use {
-            val idColumnIndex = cursor.getColumnIndexOrThrow(id)
-            val nameColumnIndex = cursor.getColumnIndexOrThrow(name)
+            val idColumnIndex = cursor.getColumnIndexOrThrow(columnId)
+            val nameColumnIndex = cursor.getColumnIndexOrThrow(columnName)
             val musicList = StringBuilder()
             while (cursor.moveToNext()) {
                 val id = cursor.getStringOrNull(idColumnIndex)
