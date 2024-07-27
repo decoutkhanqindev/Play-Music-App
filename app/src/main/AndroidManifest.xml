@@ -27,7 +27,14 @@
         <provider
             android:name=".data.MusicContentProvider"
             android:authorities="com.example.musicapp.provider"
-            android:exported="true" />
+            android:exported="false" />
+
+        <receiver android:name=".receiver.NetworkConnectivityReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
