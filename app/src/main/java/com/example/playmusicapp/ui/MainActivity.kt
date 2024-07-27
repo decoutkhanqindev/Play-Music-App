@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
             while (cursor.moveToNext()) {
                 val id = cursor.getStringOrNull(idColumnIndex)
                 val name = cursor.getStringOrNull(nameColumnIndex)
-                musicList.append("${id?.padEnd(50)} ${name}\n")
+                musicList.append("${id?.padEnd(40)} ${name}\n")
             }
             binding.listOfSongs.text = musicList.toString()
         }
