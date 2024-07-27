@@ -1,16 +1,21 @@
 package com.example.playmusicapp.ui
 
 import android.content.ContentValues
+import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.database.getStringOrNull
 import com.example.playmusicapp.data.MusicContentProvider
 import com.example.playmusicapp.databinding.ActivityMainBinding
+import com.example.playmusicapp.receiver.NetworkConnectivityReceiver
 
 class MainActivity : AppCompatActivity() {
 
     companion object {
+        // constants of musics content provider
         private val URI = MusicContentProvider.CONTENT_URI
         private const val ID = MusicContentProvider.COLUMN_ID
         private const val NAME = MusicContentProvider.COLUMN_NAME
@@ -24,6 +29,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        requestNetworkPermission()
+
         queryMusics()
 
         binding.insertBtn.setOnClickListener {
@@ -35,6 +42,12 @@ class MainActivity : AppCompatActivity() {
                 queryMusics()
             }
         }
+    }
+
+    private fun requestNetworkPermission() {
+        val receiver = NetworkConnectivityReceiver()
+        val intentFilter = IntentFilter(Intent.ACTION_BOOT_COMPLETED)
+        registerReceiver(receiver, intentFilter)
     }
 
     private fun insertSong(name: String) {
