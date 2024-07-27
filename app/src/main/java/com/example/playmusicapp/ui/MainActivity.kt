@@ -71,13 +71,13 @@ class MainActivity : AppCompatActivity() {
         cursor?.use {
             val idColumnIndex = cursor.getColumnIndexOrThrow(id)
             val nameColumnIndex = cursor.getColumnIndexOrThrow(name)
-            val arrayOfMusics = StringBuilder()
+            val musicList = StringBuilder()
             while (cursor.moveToNext()) {
                 val id = cursor.getStringOrNull(idColumnIndex)
                 val name = cursor.getStringOrNull(nameColumnIndex)
-                arrayOfMusics.append("${id?.padEnd(50)} ${name}\n")
+                musicList.append("${id?.padEnd(50)} ${name}\n")
             }
-            binding.listOfSongs.text = arrayOfMusics.toString()
+            binding.listOfSongs.text = musicList.toString()
         }
     }
 }
