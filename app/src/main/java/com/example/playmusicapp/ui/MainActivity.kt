@@ -12,6 +12,7 @@ import com.example.playmusicapp.databinding.ActivityMainBinding
 import com.example.playmusicapp.receiver.NetworkConnectivityReceiver
 
 class MainActivity : AppCompatActivity() {
+
     private val binding by lazy(LazyThreadSafetyMode.NONE) {
         ActivityMainBinding.inflate(layoutInflater)
     }
