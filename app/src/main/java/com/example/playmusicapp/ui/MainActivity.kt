@@ -19,8 +19,8 @@ class MainActivity : AppCompatActivity() {
 
     // musics content provider
     private val uri = MusicContentProvider.CONTENT_URI
-    private val columnId = MusicContentProvider.COLUMN_ID
-    private val columnName = MusicContentProvider.COLUMN_NAME
+    private val idColumn = MusicContentProvider.COLUMN_ID
+    private val nameColumn = MusicContentProvider.COLUMN_NAME
 
     // network broadcast receiver
     private val receiver = NetworkConnectivityReceiver()
@@ -33,11 +33,11 @@ class MainActivity : AppCompatActivity() {
         displayMusicList()
 
         binding.insertNewSongBtn.setOnClickListener {
-            val nameOfSong = binding.enterNameSong.text.toString()
-            if (nameOfSong.isEmpty()) {
+            val nameSong = binding.enterNameSong.text.toString()
+            if (nameSong.isEmpty()) {
                 Toast.makeText(this, "Name of song is empty", Toast.LENGTH_SHORT).show()
             } else {
-                insertNewSong(nameOfSong)
+                insertNewSong(nameSong)
                 displayMusicList()
             }
         }
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun insertNewSong(name: String) {
         val nameValue = ContentValues().apply {
-            put(columnName, name)
+            put(nameColumn, name)
         }
         contentResolver.insert(uri, nameValue)
             .let { Toast.makeText(this, "New Music Inserted", Toast.LENGTH_LONG).show() }
@@ -64,14 +64,14 @@ class MainActivity : AppCompatActivity() {
     private fun displayMusicList() {
         val cursor = contentResolver.query(
             /* uri = */ uri,
-            /* projection = */ arrayOf(columnId, columnName),
+            /* projection = */ arrayOf(idColumn, nameColumn),
             /* selection = */ null,
             /* selectionArgs = */ null,
-            /* sortOrder = */ "$columnId ASC"
+            /* sortOrder = */ "$idColumn ASC"
         )
         cursor?.use {
-            val idColumnIndex = cursor.getColumnIndexOrThrow(columnId)
-            val nameColumnIndex = cursor.getColumnIndexOrThrow(columnName)
+            val idColumnIndex = cursor.getColumnIndexOrThrow(idColumn)
+            val nameColumnIndex = cursor.getColumnIndexOrThrow(nameColumn)
             val musicList = StringBuilder()
             while (cursor.moveToNext()) {
                 val id = cursor.getStringOrNull(idColumnIndex)
