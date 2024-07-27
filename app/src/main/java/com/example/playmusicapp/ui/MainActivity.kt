@@ -6,6 +6,7 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.database.getStringOrNull
 import com.example.playmusicapp.data.MusicContentProvider
@@ -19,6 +20,10 @@ class MainActivity : AppCompatActivity() {
         private val URI = MusicContentProvider.CONTENT_URI
         private const val ID = MusicContentProvider.COLUMN_ID
         private const val NAME = MusicContentProvider.COLUMN_NAME
+
+        // network broadcast receiver
+        private val receiver = NetworkConnectivityReceiver()
+        private val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
     }
 
     private val binding by lazy(LazyThreadSafetyMode.NONE) {
@@ -28,8 +33,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-        requestNetworkPermission()
 
         queryMusics()
 
@@ -44,10 +47,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun requestNetworkPermission() {
-        val receiver = NetworkConnectivityReceiver()
-        val intentFilter = IntentFilter(Intent.ACTION_BOOT_COMPLETED)
+    override fun onStart() {
+        super.onStart()
         registerReceiver(receiver, intentFilter)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(receiver)
     }
 
     private fun insertSong(name: String) {
