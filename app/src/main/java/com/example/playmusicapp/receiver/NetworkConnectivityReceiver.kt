@@ -10,24 +10,20 @@ import android.widget.Toast
 
 class NetworkConnectivityReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        if (intent?.action == Intent.ACTION_SCREEN_ON) {
-            // quan ly ket noi mang
-            val connectivityManager =
-                context?.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
-            // lay thong tin ve kha nang cua mang hien tai dang hoat dong
-            val networkCapabilities =
-                connectivityManager?.getNetworkCapabilities(connectivityManager.activeNetwork)
-            // kiem tra ket noi mang
-            val isConnected =
-                networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ?: false
+        // quan ly ket noi mang
+        val connectivityManager =
+            context?.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+        // lay thong tin ve kha nang cua mang hien tai dang hoat dong
+        val networkCapabilities =
+            connectivityManager?.getNetworkCapabilities(connectivityManager.activeNetwork)
+        // kiem tra ket noi mang
+        val isConnected =
+            networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ?: false
 
-            if (isConnected) {
-                Toast.makeText(context, "Network connected", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(context, "Network disconnected", Toast.LENGTH_SHORT).show()
-            }
+        if (isConnected) {
+            Toast.makeText(context, "Network connected", Toast.LENGTH_SHORT).show()
         } else {
-            Log.d("NetworkConnectivityReceiver", "Received unexpected action: ${intent?.action}")
+            Toast.makeText(context, "Network disconnected", Toast.LENGTH_SHORT).show()
         }
     }
 }
