@@ -27,7 +27,7 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/nameOfSong"
+            android:id="@+id/enterNameSong"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -38,7 +38,7 @@
             tools:ignore="Autofill,TextContrastCheck,TouchTargetSizeCheck,VisualLintTextFieldSize" />
 
         <Button
-            android:id="@+id/insertBtn"
+            android:id="@+id/insertNewSongBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -47,7 +47,7 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/titleOfSongs"
+            android:id="@+id/titleMusicList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -58,7 +58,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/listOfSongs"
+            android:id="@+id/musicList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"

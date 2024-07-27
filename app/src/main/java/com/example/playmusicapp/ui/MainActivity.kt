@@ -32,8 +32,8 @@ class MainActivity : AppCompatActivity() {
 
         displayMusicList()
 
-        binding.insertBtn.setOnClickListener {
-            val nameOfSong = binding.nameOfSong.text.toString()
+        binding.insertNewSongBtn.setOnClickListener {
+            val nameOfSong = binding.enterNameSong.text.toString()
             if (nameOfSong.isEmpty()) {
                 Toast.makeText(this, "Name of song is empty", Toast.LENGTH_SHORT).show()
             } else {
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                 val name = cursor.getStringOrNull(nameColumnIndex)
                 musicList.append("${id?.padEnd(40)} ${name}\n")
             }
-            binding.listOfSongs.text = musicList.toString()
+            binding.musicList.text = musicList.toString()
         }
     }
 }
