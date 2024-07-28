@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         binding.insertNewSongBtn.setOnClickListener {
             val nameSong = binding.enterNameSong.text.toString()
             if (nameSong.isEmpty()) {
-                Toast.makeText(this, "Name of song is empty", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Song Name Is Blank", Toast.LENGTH_SHORT).show()
             } else {
                 insertNewSong(nameSong)
                 displayMusicList()
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         binding.startNameSongBtn.setOnClickListener {
             val nameSong = binding.enterNameSongToPlay.text.toString()
             if (nameSong.isEmpty()) {
-                Toast.makeText(this, "Name of song is empty", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Song Name Is Blank", Toast.LENGTH_SHORT).show()
             } else {
                 startMusicService(nameSong, "Start")
             }
