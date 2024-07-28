@@ -65,5 +65,46 @@
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/enterIdSong"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:hint="@string/hintEnterText1"
+            android:inputType="text"
+            tools:ignore="Autofill,TextContrastCheck,TouchTargetSizeCheck,VisualLintTextFieldSize"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/startIdSongBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/start"
+                android:textSize="15sp"
+                tools:ignore="ButtonStyle" />
+
+            <Button
+                android:id="@+id/stopIdSongBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/stop"
+                android:textSize="15sp"
+                tools:ignore="ButtonStyle" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

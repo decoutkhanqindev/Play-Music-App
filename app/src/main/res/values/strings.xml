@@ -4,5 +4,8 @@
     <string name="name">NAME</string>
     <string name="titleOfMusics">Your List</string>
     <string name="hintEnterText">Enter Name of The Song</string>
+    <string name="hintEnterText1">Enter Id of The Song</string>
     <string name="insert">Insert</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
 </resources>
