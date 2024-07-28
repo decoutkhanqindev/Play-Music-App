@@ -6,11 +6,14 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.media.tv.TvContract.Channels.Logo
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.example.playmusicapp.R
+import com.example.playmusicapp.data.MusicContentProvider
 
 class MusicForegroundService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
@@ -23,20 +26,22 @@ class MusicForegroundService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         createNotificationChannel()
 
-        // get name song
         val nameSong = intent?.getStringExtra("nameSong") ?: ""
+        val songData = querySongByName(this, nameSong)
+        if (songData != null) {
+            val action = intent?.getStringExtra("actionKey") ?: ""
+            when (action) {
+                "Start" -> {
+                    val notification = createNotification(songData.name)
+                    startForeground(NOTIFICATION_ID, notification)
+                }
 
-        val notification = createNotification(nameSong)
-
-        startForeground(NOTIFICATION_ID, notification)
-
-        val action = intent?.getStringExtra("actionKey") ?: ""
-        when (action) {
-            "Start" -> Toast.makeText(this, "$nameSong is playing", Toast.LENGTH_LONG).show()
-            "Stop" -> {
-                stopSelf()
-                Toast.makeText(this, "$nameSong is stopped", Toast.LENGTH_LONG).show()
+                "Stop" -> {
+                    stopSelf()
+                }
             }
+        } else {
+            Toast.makeText(this, "Song not found: $nameSong", Toast.LENGTH_SHORT).show()
         }
 
         return START_STICKY
@@ -63,7 +68,33 @@ class MusicForegroundService : Service() {
         return NotificationCompat.Builder(this, CHANNEL_ID).apply {
             setSmallIcon(R.mipmap.ic_launcher)
             setContentTitle(getString(R.string.notification_name))
-            setContentText("$nameSong is playing)}")
+            setContentText("$nameSong is playing")
         }.build()
     }
+
+    private fun querySongByName(context: Context, nameSong: String): SongData? {
+        val cursor = context.contentResolver.query(
+            /* uri = */ MusicContentProvider.CONTENT_URI,
+            /* projection = */
+            arrayOf(MusicContentProvider.COLUMN_ID, MusicContentProvider.COLUMN_NAME),
+            /* selection = */
+            "${MusicContentProvider.COLUMN_NAME} = ?",
+            /* selectionArgs = */
+            arrayOf(nameSong),
+            /* sortOrder = */
+            null
+        )
+        cursor?.use {
+            if (cursor.moveToFirst()) {
+                val id =
+                    cursor.getString(cursor.getColumnIndexOrThrow(MusicContentProvider.COLUMN_ID))
+                val name =
+                    cursor.getString(cursor.getColumnIndexOrThrow(MusicContentProvider.COLUMN_NAME))
+                return SongData(id, name)
+            }
+        }
+        return null
+    }
 }
+
+data class SongData(val id: String, val name: String)

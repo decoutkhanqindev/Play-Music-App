@@ -57,19 +57,19 @@ class MainActivity : AppCompatActivity() {
                         putExtra("nameSong", nameSong)
                         putExtra("actionKey", startBtnText)
 
-                    }
-                )
+                    })
             }
         }
 
         binding.stopNameSongBtn.setOnClickListener {
+            val nameSong = binding.enterNameSongToPlay.text.toString()
             val stopBtnText = binding.stopNameSongBtn.text.toString()
             ContextCompat.startForegroundService(
-                this,
-                Intent(this, MusicForegroundService::class.java).apply {
+                /* context = */ this,
+                /* intent = */ Intent(this, MusicForegroundService::class.java).apply {
+                    putExtra("nameSong", nameSong)
                     putExtra("actionKey", stopBtnText)
-                }
-            )
+                })
         }
     }
 
@@ -92,12 +92,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun displayMusicList() {
-        val cursor = contentResolver.query(
-            /* uri = */ uri,
-            /* projection = */ arrayOf(idColumn, nameColumn),
-            /* selection = */ null,
-            /* selectionArgs = */ null,
-            /* sortOrder = */ "$idColumn ASC"
+        val cursor = contentResolver.query(/* uri = */ uri,/* projection = */
+            arrayOf(idColumn, nameColumn),/* selection = */
+            null,/* selectionArgs = */
+            null,/* sortOrder = */
+            "$idColumn ASC"
         )
         cursor?.use {
             val idColumnIndex = cursor.getColumnIndexOrThrow(idColumn)
