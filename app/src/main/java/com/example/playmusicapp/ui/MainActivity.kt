@@ -1,15 +1,19 @@
 package com.example.playmusicapp.ui
 
 import android.content.ContentValues
+import android.content.Context
+import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.database.getStringOrNull
 import com.example.playmusicapp.data.MusicContentProvider
 import com.example.playmusicapp.databinding.ActivityMainBinding
 import com.example.playmusicapp.receiver.NetworkConnectivityReceiver
+import com.example.playmusicapp.service.MusicForegroundService
 
 class MainActivity : AppCompatActivity() {
 
@@ -39,6 +43,22 @@ class MainActivity : AppCompatActivity() {
             } else {
                 insertNewSong(nameSong)
                 displayMusicList()
+            }
+        }
+
+        binding.startNameSongBtn.setOnClickListener {
+            val nameSong = binding.enterNameSongToPlay.text.toString()
+            val startBtnText = binding.startNameSongBtn.text.toString()
+            if (nameSong.isEmpty()) {
+                Toast.makeText(this, "Name of song is empty", Toast.LENGTH_SHORT).show()
+            } else {
+                ContextCompat.startForegroundService(
+                    /* context = */ this,
+                    /* intent = */ Intent(this, MusicForegroundService::class.java).apply {
+                        putExtra("nameSong", nameSong)
+                        putExtra("actionKey", startBtnText)
+                    }
+                )
             }
         }
     }

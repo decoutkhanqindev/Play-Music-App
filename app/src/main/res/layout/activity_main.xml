@@ -67,7 +67,7 @@
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/enterIdSong"
+            android:id="@+id/enterNameSongToPlay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -85,7 +85,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/startIdSongBtn"
+                android:id="@+id/startNameSongBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -96,7 +96,7 @@
                 tools:ignore="ButtonStyle" />
 
             <Button
-                android:id="@+id/stopIdSongBtn"
+                android:id="@+id/stopNameSongBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

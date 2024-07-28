@@ -4,8 +4,10 @@
     <string name="name">NAME</string>
     <string name="titleOfMusics">Your List</string>
     <string name="hintEnterText">Enter Name of The Song</string>
-    <string name="hintEnterText1">Enter Id of The Song</string>
+    <string name="hintEnterText1">Enter Name of The Song to play</string>
     <string name="insert">Insert</string>
     <string name="start">Start</string>
     <string name="stop">Stop</string>
+    <string name="notification_name">Play Music App</string>
+    <string name="notification_description">The song is playing</string>
 </resources>
