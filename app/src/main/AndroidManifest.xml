@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -30,12 +31,16 @@
             android:authorities="com.example.musicapp.provider"
             android:exported="false" />
 
-        <receiver android:name=".receiver.NetworkConnectivityReceiver"
+        <receiver
+            android:name=".receiver.NetworkConnectivityReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
+        <service android:name=".service.MusicForegroundService"
+            android:exported="false"/>
     </application>
 
 </manifest>
