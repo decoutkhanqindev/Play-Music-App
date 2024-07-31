@@ -50,7 +50,7 @@ internal class MusicContentProvider : ContentProvider() {
     override fun onCreate(): Boolean {
         val dbHelper = MusicsDatabaseHelper(context!!)
         db = dbHelper.writableDatabase // database co the thay doi
-        return true
+        return db != null
     }
 
     override fun query(
@@ -60,27 +60,30 @@ internal class MusicContentProvider : ContentProvider() {
         selectionArgs: Array<out String>?,
         sortOrder: String?
     ): Cursor? {
-        // xau dung cau truy van SQL
-        val qb = SQLiteQueryBuilder().apply {
-            tables = TABLE_NAME
-            when (uriMatcher.match(uri)) { // xac dinh loai truy van
-                // neu khop voi 1 trong nhung URI pattern da dang ky
-                URI_CODE -> projectionMap = null // cac cot cua bang se dc tra ve
-                else -> throw IllegalArgumentException("Unknown URI $uri")
+        db?.let {// neu db != null thi let moi thuc hien
+            // xau dung cau truy van SQL
+            val qb = SQLiteQueryBuilder().apply {
+                tables = TABLE_NAME
+                when (uriMatcher.match(uri)) { // xac dinh loai truy van
+                    // neu khop voi 1 trong nhung URI pattern da dang ky
+                    URI_CODE -> projectionMap = null // cac cot cua bang se dc tra ve
+                    else -> throw IllegalArgumentException("Unknown URI $uri")
+                }
             }
+            val cursor = qb.query( // chua ket qua tra ve
+                /* db = */ it,
+                /* projectionIn = */ projection,
+                /* selection = */ selection,
+                /* selectionArgs = */ selectionArgs,
+                /* groupBy = */ null,
+                /* having = */ null,
+                /* sortOrder = */ sortOrder
+            )
+            // dang ki uri voi content resolver de nhan thong bao neu data trong bang thay doi
+            cursor?.setNotificationUri(context!!.contentResolver, uri)
+            return cursor
         }
-        val cursor = qb.query( // chua ket qua tra ve
-            /* db = */ db,
-            /* projectionIn = */ projection,
-            /* selection = */ selection,
-            /* selectionArgs = */ selectionArgs,
-            /* groupBy = */ null,
-            /* having = */ null,
-            /* sortOrder = */ sortOrder
-        )
-        // dang ki uri voi content resolver de nhan thong bao neu data trong bang thay doi
-        cursor?.setNotificationUri(context!!.contentResolver, uri)
-        return cursor
+        return null
     }
 
     override fun getType(uri: Uri): String {
@@ -90,30 +93,38 @@ internal class MusicContentProvider : ContentProvider() {
         }
     }
 
-    override fun insert(uri: Uri, values: ContentValues?): Uri {
-        val rowId = db!!.insert(
-            /* table = */ TABLE_NAME,
-            /* nullColumnHack = */ null,
-            /* values = */ values
-        )
-        if (rowId > 0) { // chen thanh cong
-            // tao uri moi + id
-            val newUri = ContentUris.withAppendedId(CONTENT_URI, rowId)
-            // dang ky nhan thong bao cho content resolver rang
-            // doi voi bat ki observer nao da dang ki voi uri moi da thay doi
-            context!!.contentResolver.notifyChange(newUri, null)
-            return newUri
+    override fun insert(uri: Uri, values: ContentValues?): Uri? {
+        db?.let {
+            val rowId = it.insert(
+                /* table = */ TABLE_NAME,
+                /* nullColumnHack = */ null,
+                /* values = */ values
+            )
+            if (rowId > 0) { // chen thanh cong
+                // tao uri moi + id
+                val newUri = ContentUris.withAppendedId(CONTENT_URI, rowId)
+                // dang ky nhan thong bao cho content resolver rang
+                // doi voi bat ki observer nao da dang ki voi uri moi da thay doi
+                context!!.contentResolver.notifyChange(newUri, null)
+                return newUri
+            }
+            throw SQLiteException("Failed to add a record into $uri")
         }
-        throw SQLiteException("Failed to add a record into $uri")
+        return null
     }
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int {
-        val numberOfRowAffected = when (uriMatcher.match(uri)) {
-            URI_CODE -> db!!.delete(TABLE_NAME, selection, selectionArgs)
-            else -> throw IllegalArgumentException("Unknown URI $uri")
+        db?.let {
+            val numberOfRowAffected = when (uriMatcher.match(uri)) {
+                URI_CODE -> it.delete(TABLE_NAME, selection, selectionArgs)
+                else -> throw IllegalArgumentException("Unknown URI $uri")
+            }
+            if (numberOfRowAffected > 0) {
+                context!!.contentResolver.notifyChange(uri, null)
+            }
+            return numberOfRowAffected
         }
-        context!!.contentResolver.notifyChange(uri, null)
-        return numberOfRowAffected
+        return 0
     }
 
     override fun update(
@@ -122,12 +133,17 @@ internal class MusicContentProvider : ContentProvider() {
         selection: String?,
         selectionArgs: Array<out String>?
     ): Int {
-        val numberOfRowAffected = when (uriMatcher.match(uri)) {
-            URI_CODE -> db!!.update(TABLE_NAME, values, selection, selectionArgs)
-            else -> throw IllegalArgumentException("Unknown URI $uri")
+        db?.let {
+            val numberOfRowAffected = when (uriMatcher.match(uri)) {
+                URI_CODE -> it.update(TABLE_NAME, values, selection, selectionArgs)
+                else -> throw IllegalArgumentException("Unknown URI $uri")
+            }
+            if (numberOfRowAffected > 0) {
+                context!!.contentResolver.notifyChange(uri, null)
+            }
+            return numberOfRowAffected
         }
-        context!!.contentResolver.notifyChange(uri, null)
-        return numberOfRowAffected
+        return 0
     }
 
     private class MusicsDatabaseHelper(context: Context) : SQLiteOpenHelper(
