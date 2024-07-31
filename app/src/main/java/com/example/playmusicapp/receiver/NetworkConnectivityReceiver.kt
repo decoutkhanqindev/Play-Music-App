@@ -21,9 +21,27 @@ class NetworkConnectivityReceiver : BroadcastReceiver() {
             networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ?: false
 
         if (isConnected) {
-            Toast.makeText(context, "Network connected", Toast.LENGTH_SHORT).show()
+            if (hasInternetAccess()) {
+                Toast.makeText(context, "Network connected", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "Network connected but no internet access", Toast.LENGTH_SHORT).show()
+            }
         } else {
             Toast.makeText(context, "Network disconnected", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun hasInternetAccess(): Boolean {
+        return try {
+            val runtime = Runtime.getRuntime()
+            val process = runtime.exec(
+                "/system/bin/ping -c 1 8.8.8.8" // ping to google dns
+            )
+            process.waitFor() // Nó được sử dụng để chặn luồng hiện tại cho đến khi quá trình được đại diện bởi đối tượng Process kết thúc.
+            process.exitValue() == 0 //ket noi thanh cong
+        } catch (e: Exception) {
+            Log.e("NetworkConnectivity", "Error checking internet access", e)
+            false
         }
     }
 }
